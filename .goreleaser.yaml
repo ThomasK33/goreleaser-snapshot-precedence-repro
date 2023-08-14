@@ -1,0 +1,17 @@
+project_name: repro
+
+before:
+  hooks:
+    - go mod tidy
+    - go run hack/generator.go -version {{ .Version }}
+
+builds:
+  - mod_timestamp: "{{ .CommitTimestamp }}"
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X main.Version={{.Version}}
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
